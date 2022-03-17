@@ -9,12 +9,16 @@ import {
   message,
   Skeleton,
   Tooltip,
+  Typography,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import logo from "../assets/logo.jpeg";
 // const table = {
 //     votes: null,
 //     img: "",
 //   };
+
+const { Text } = Typography;
 function formatNumber(value) {
   value += "";
   const list = value.split(".");
@@ -60,9 +64,9 @@ export const Table = ({ id, setTables }) => {
       });
   };
   const cover = image ? (
-    <Image src={image} style={{ width: 260, height: 300, marginLeft: 55 }} />
+    <Image src={image} style={{ width: 260, height: 300, marginLeft: 45 }} />
   ) : (
-    <Skeleton.Image style={{ width: 250, height: 300, marginLeft: 55 }} />
+    <Skeleton.Image style={{ width: 260, height: 300, marginLeft: 45 }} />
   );
   const handleChange = (e) => {
     setVotes(parseInt(e.target.value));
@@ -86,13 +90,19 @@ export const Table = ({ id, setTables }) => {
       return [...state];
     });
   };
+  const header = <span className="blue">Mesa número {id + 1}</span>;
   return (
-    <Card
-      title={`Mesa número ${id + 1}`}
-      style={{ width: 400, margin: 20, padding: 15 }}
-      cover={cover}
-    >
-      <label>Cuantos botos obtuvo el PACTO?</label>
+    <Card title={header} className="card" cover={cover}>
+      {/* <label>Por favor carga la fotografía</label> */}
+      <Upload
+        name="image"
+        className="center"
+        // beforeUpload={beforeUpload}
+        onChange={uploadImage}
+      >
+        {uploadButton}
+      </Upload>
+      <Text className="m-t">Cuantos botos obtuvo el PACTO?</Text>
       <Tooltip
         trigger={["focus"]}
         title={title}
@@ -106,20 +116,20 @@ export const Table = ({ id, setTables }) => {
           maxLength={4}
           value={votes}
           type="number"
+          size="large"
         />
       </Tooltip>
-      <label>Por favor carga la fotografía</label>
-      <Upload
-        name="avatar"
-        className="avatar-uploader"
-        // beforeUpload={beforeUpload}
-        onChange={uploadImage}
+
+      <Button
+        block
+        type="primary"
+        size="large"
+        onClick={handleClick}
+        style={{ marginTop: 15 }}
       >
-        {uploadButton}
-      </Upload>
-      <Button block type="primary" size="large" onClick={handleClick}>
         Enviar
       </Button>
+      <img className="logo" src={logo} alt="logo" />
     </Card>
   );
 };

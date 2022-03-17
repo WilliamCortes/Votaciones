@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, Input, Layout, Typography } from "antd";
 import { Table } from "./Table";
-const { Header, Footer, Content } = Layout;
+import logo from "../assets/logo.jpeg";
 
+const { Header, Footer, Content } = Layout;
 const { Text, Link, Title } = Typography;
 
 const totalVotes = (tables) =>
@@ -39,19 +40,19 @@ export const Home = () => {
             title={`Total mesas ${
               Array.isArray(tables) ? tables.length : tables
             }`}
-            style={{ width: 400, margin: 20, padding: 15 }}
+            className="fixed card"
           >
             {Array.isArray(tables) && (
-              <Title level={4}>Total votos: {total}</Title>
+              <Title level={4} className="green">
+                Total votos: {total}
+              </Title>
             )}
+            <img className="logo" src={logo} alt="logo" />
           </Card>
           {Array.isArray(tables) ? (
             tables.map((t, i) => <Table key={i} {...t} setTables={setTables} />)
           ) : (
-            <Card
-              title="Cuantas mesas deseas crear?"
-              style={{ width: 400, margin: 20, padding: 15 }}
-            >
+            <Card title="Cuantas mesas deseas crear?" className="card">
               <Input
                 name="numbreTables"
                 value={tables}
