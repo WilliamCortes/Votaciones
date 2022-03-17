@@ -58,3 +58,8 @@ code {
   align-items: center;
   justify-content: center;
 }
+.spin {
+  position: absolute !important;
+  top: 20%;
+  left: 40%;
+}

@@ -10,6 +10,7 @@ import {
   Skeleton,
   Tooltip,
   Typography,
+  Spin,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import logo from "../assets/logo.jpeg";
@@ -38,10 +39,12 @@ function formatNumber(value) {
 export const Table = ({ id, setTables }) => {
   const [image, setImage] = useState("");
   const [votes, setVotes] = useState("");
+  const [loading, setLoading] = useState(false);
   const uploadButton = (
     <Button icon={<UploadOutlined />}>Click para subir la imagen</Button>
   );
   const uploadImage = async (e) => {
+    setLoading(true);
     const files = e.fileList;
     const images = new FormData();
     const axiosInstance = axios.create();
@@ -61,7 +64,8 @@ export const Table = ({ id, setTables }) => {
       .catch((err) => {
         message.error(`Upps algo salió mal, por favor intentalo nuevamente`);
         console.log("Table/Error: ", err);
-      });
+      })
+      .finally(() => setLoading(false));
   };
   const cover = image ? (
     <Image src={image} style={{ width: 260, height: 300, marginLeft: 45 }} />
@@ -130,6 +134,7 @@ export const Table = ({ id, setTables }) => {
         Enviar
       </Button>
       <img className="logo" src={logo} alt="logo" />
+      {loading && <Spin className="spin" size="large" tip="Cargando..." />}
     </Card>
   );
 };
