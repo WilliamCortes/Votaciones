@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Button, Card, Input, Layout, Typography } from "antd";
 import { Table } from "./Table";
 import logo from "../assets/logo.jpeg";
@@ -17,17 +18,14 @@ export const Home = () => {
     setTotal(totalVotes(tables));
   }, [tables]);
 
-  const table = {
-    votes: 0,
-    img: "",
-  };
+
   const handleChange = (e) => setTables(e.target.value);
   const handleClick = (e) => {
     if (!tables) return;
-    const totalTables = Array(parseInt(tables))
-      .fill(table)
-      .map((table, i) => ({ ...table, id: i }));
-    setTables(totalTables);
+    axios.post(`/api/tables/${tables}`).then(({ data }) => {
+      console.log(data)
+      setTables(data);
+    })
   };
   console.log(total);
 
@@ -37,9 +35,8 @@ export const Home = () => {
         <Header></Header>
         <Content className="content">
           <Card
-            title={`Total mesas ${
-              Array.isArray(tables) ? tables.length : tables
-            }`}
+            title={`Total mesas ${Array.isArray(tables) ? tables.length : tables
+              }`}
             className="fixed card"
           >
             {Array.isArray(tables) && (

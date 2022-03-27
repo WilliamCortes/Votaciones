@@ -11,13 +11,15 @@ import {
   Tooltip,
   Typography,
   Spin,
+  Row,
+  Col
 } from "antd";
+import swal from 'sweetalert';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { useAuth } from '../context/AuthContext';
 import { UploadOutlined } from "@ant-design/icons";
 import logo from "../assets/logo.jpeg";
-// const table = {
-//     votes: null,
-//     img: "",
-//   };
+
 
 const { Text } = Typography;
 function formatNumber(value) {
@@ -36,10 +38,20 @@ function formatNumber(value) {
   return `${prefix}${result}${list[1] ? `.${list[1]}` : ""}`;
 }
 
-export const Table = ({ id, setTables }) => {
+export const Table = ({ id, setTables, number, email }) => {
+  const initialState = {
+    name: '',
+    email: '',
+    password: '',
+  }
   const [image, setImage] = useState("");
   const [votes, setVotes] = useState("");
   const [loading, setLoading] = useState(false);
+  const [state, setState] = useState(initialState)
+  const [response, setResponse] = useState({})
+
+  const { signup } = useAuth();
+
   const uploadButton = (
     <Button icon={<UploadOutlined />}>Click para subir la imagen</Button>
   );
@@ -94,47 +106,144 @@ export const Table = ({ id, setTables }) => {
       return [...state];
     });
   };
-  const header = <span className="blue">Mesa número {id + 1}</span>;
-  return (
-    <Card title={header} className="card" cover={cover}>
-      {/* <label>Por favor carga la fotografía</label> */}
-      <Upload
-        name="image"
-        className="center"
-        // beforeUpload={beforeUpload}
-        onChange={uploadImage}
-      >
-        {uploadButton}
-      </Upload>
-      <Text className="m-t">Cuantos botos obtuvo el PACTO?</Text>
-      <Tooltip
-        trigger={["focus"]}
-        title={title}
-        placement="topLeft"
-        overlayClassName="numeric-input"
-      >
-        <Input
-          onChange={handleChange}
-          // onBlur={this.onBlur}
-          placeholder="Número de votos"
-          maxLength={4}
-          value={votes}
-          type="number"
-          size="large"
-        />
-      </Tooltip>
+  const header = <span className="blue">Mesa número {number}</span>
 
-      <Button
-        block
-        type="primary"
-        size="large"
-        onClick={handleClick}
-        style={{ marginTop: 15 }}
-      >
-        Enviar
-      </Button>
-      <img className="logo" src={logo} alt="logo" />
-      {loading && <Spin className="spin" size="large" tip="Cargando..." />}
-    </Card>
+  const handleChangeCreate = event => {
+    setState({ ...state, [event.target.name]: event.target.value, })
+  }
+
+  const handleClickCreate = async () => {
+    const {
+      name,
+      email,
+      password,
+    } = state
+    if (!name || !email || !password) return
+    try {
+      await signup(state.email, state.password).then((() => {
+        axios.put(`/api/tables/addname`, { ...state, id }).then(({ data }) => {
+          setResponse({ email: data.email, name: data.name })
+          swal({
+            title: `Mesa asignada a ${data.name} 🎉`,
+            icon: "success",
+            timer: 1500,
+          });
+        })
+      }))
+    } catch (error) {
+      swal({
+        title: "Lo sentimos",
+        text: `${error.message}`,
+        icon: "warning",
+        timer: 3000,
+      });
+      console.log(error.message);
+    }
+  }
+
+  return (
+    <>
+      {email || Object.keys(response).length ?
+
+        <Card title={header} className="card m-h" cover={cover}>
+          <Upload
+            name="image"
+            className="center"
+            onChange={uploadImage}
+          >
+            {uploadButton}
+          </Upload>
+          <Row>
+            <Text className="m-t">Cuantos votos obtuvo el PACTO?</Text>
+            <Col span={9}>
+              <Tooltip
+                trigger={["focus"]}
+                title={title}
+                placement="topLeft"
+                overlayClassName="numeric-input"
+              >
+
+                <Input
+                  onChange={handleChange}
+                  // onBlur={this.onBlur}
+                  placeholder="Número..."
+                  maxLength={4}
+                  value={votes}
+                  type="number"
+                  size="large"
+                />
+              </Tooltip>
+            </Col>
+            <Col span={1} />
+            <Col span={14}>
+              <Tooltip title='Testigo'>
+                <Input
+                  value={response.name}
+                  size="large"
+                  readOnly
+                  bordered
+                />
+              </Tooltip>
+            </Col>
+          </Row>
+
+
+          <Button
+            block
+            type="primary"
+            size="large"
+            onClick={handleClick}
+            style={{ marginTop: 15 }}
+          >
+            Enviar
+          </Button>
+          <img className="logo" src={logo} alt="logo" />
+          {loading && <Spin className="spin" size="large" tip="Cargando..." />}
+        </Card>
+        :
+        // **********************************************************************
+        <Card title={header} className="card m-h" >
+          <Skeleton.Input style={{ width: 300, height: 222, marginBottom: 20, background: '#85F4FF', opacity: 0.1 }} />
+          <Text className="m-t">Nombre del testigo</Text>
+          <Input
+            onChange={handleChangeCreate}
+            placeholder="Nombre ..."
+            name='name'
+            value={state.name}
+            type="text"
+            size="large"
+          />
+          <Text className="m-t">Correo del testigo</Text>
+          <Input
+            onChange={handleChangeCreate}
+            placeholder="Email ..."
+            name='email'
+            value={state.email}
+            type="email"
+            size="large"
+          />
+
+          <Text className="m-t">Contraseña del testigo</Text>
+          <Input.Password
+            name='password'
+            value={state.password}
+            placeholder='Contraseña...'
+            onChange={handleChangeCreate}
+            iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+            size="large"
+          />
+          <Button
+            block
+            type="primary"
+            size="large"
+            onClick={handleClickCreate}
+            style={{ marginTop: 15 }}
+          >
+            Enviar
+          </Button>
+          <img className="logo" src={logo} alt="logo" />
+          {loading && <Spin className="spin" size="large" tip="Cargando..." />}
+        </Card>}
+    </>
   );
 };

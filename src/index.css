@@ -15,15 +15,16 @@ code {
   position: relative;
   min-height: 85vh;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
+  flex-wrap: wrap;
+  justify-content: space-around;
   align-items: center;
+  margin-top: 70px;
 }
 
 .fixed {
-  position: sticky !important;
-  top: 0;
-  left: 20px;
-
+  position: fixed !important;
+  top: -10px;
   z-index: 5;
 }
 .card {
@@ -51,6 +52,9 @@ code {
 }
 .m-t {
   margin-top: 15px !important;
+}
+.m-h {
+  min-height: 590px;
 }
 .center {
   display: flex;

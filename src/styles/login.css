@@ -1,0 +1,100 @@
+.login {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100vw;
+  min-height: 100vh;
+  background-image: url("../assets/back.png");
+  background-repeat: no-repeat;
+  background-size: 2000px 800px;
+  background-position-x: -400px;
+}
+
+.login_logo {
+  display: flex;
+  margin: 40px 0 0 80px;
+}
+.login_logo img {
+  width: 250px;
+  height: 140px;
+}
+
+.login_form {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  height: 400px;
+  margin: 9vw 10vw 9vw 0;
+  padding: 0 2vw;
+  background-color: #efefef;
+  border-radius: 8px;
+  justify-content: space-evenly;
+  box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
+}
+.login_form h3 {
+  font-weight: 100;
+}
+.login_form label {
+  font-weight: 600;
+}
+
+.login_form input {
+  height: 45px;
+  border-radius: 5px;
+  padding-left: 20px;
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
+}
+.login_form input:focus {
+  outline: none;
+}
+.signup_label_password {
+  position: relative;
+}
+.signup_label_password > input {
+  margin-top: 15px;
+}
+.login_icon_eye {
+  position: absolute;
+  right: 10px;
+  top: 48px;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+.login_form a {
+  text-decoration: none;
+  font-weight: 700;
+  color: blue;
+}
+.login_button {
+  background-color: rgb(0, 191, 165);
+  border: none;
+  border-radius: 5px;
+  min-height: 35px;
+  color: white;
+  font-weight: 600;
+}
+.login_button:hover {
+  cursor: pointer;
+}
+
+.login_div {
+  text-align: center;
+}
+
+@media (min-width: 1600px) {
+  body {
+    background-size: 2350px 1000px;
+  }
+}
+
+@media (max-width: 900px) {
+  .login {
+    justify-content: center;
+  }
+  .login_form {
+    margin: unset;
+    margin-top: 40px;
+  }
+}
