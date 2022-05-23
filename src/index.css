@@ -35,10 +35,18 @@ code {
   box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
 }
 
+.logo-out{
+  position: absolute ;
+  top: 0;
+  right: 0;
+  background-color: transparent;
+  border:none;
+  cursor: pointer;
+}
 .logo {
   position: absolute;
   top: 0;
-  right: 0;
+  right: 20px;
   width: 150px;
 }
 .green {

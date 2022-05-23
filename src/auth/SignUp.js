@@ -14,6 +14,9 @@ export const SignUp = () => {
         name: '',
         email: '',
         password: '',
+        isAdmin: true,
+        tableId:'',
+        haveTables:false,
     }
     const { signup } = useAuth();
     const history = useHistory();
@@ -29,11 +32,13 @@ export const SignUp = () => {
         event.preventDefault();
         try {
             await signup(state.email, state.password).then((() => {
-                axios.post(`/api/users`, state).then(({ data }) => {
+                axios.post(`/api/users`, {...state})
+                .then(({ data }) => {
                     localStorage.setItem('user', JSON.stringify({
                         id: data.id,
                         name: data.name,
                         email: data.email,
+                        isAdmin: true,
                     }))
                     swal({
                         title: `Bienvenid@ ${data.name} 🎉`,
@@ -53,6 +58,7 @@ export const SignUp = () => {
             console.log(error.message);
         }
     }
+
     return (
         <div className='signup'>
             <div className='signup_logo'>

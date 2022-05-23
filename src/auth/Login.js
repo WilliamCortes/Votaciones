@@ -22,15 +22,19 @@ export const Login = () => {
         e.preventDefault();
         try {
             await login(email, password).then((() => {
-                axios.get(`/api/users/email`, { email }).then(({ data }) => {
+                axios.get(`/api/users/${email}`).then(({ data }) => {
+                    data.isAdmin ? 
+                        history.push(`/home/${data.haveTables}`)
+                    :
+                        history.push(`/table/${data.tableId}`);
                     localStorage.setItem('user', JSON.stringify({
                         id: data.id,
                         name: data.name,
                         email: data.email,
+                        tableId: data.tableId,
                     }))
                 })
             }))
-            history.push('/');
         } catch (error) {
             swal({
                 title: "Lo sentimos",

@@ -38,14 +38,15 @@ function formatNumber(value) {
   return `${prefix}${result}${list[1] ? `.${list[1]}` : ""}`;
 }
 
-export const Table = ({ id, setTables, number, email }) => {
+export const Table = ({ id, setTables, number, email, name, img, votes }) => {
   const initialState = {
     name: '',
     email: '',
     password: '',
+    isAdmin: false,
   }
-  const [image, setImage] = useState("");
-  const [votes, setVotes] = useState("");
+  // const [img, setImage] = useState("");
+  // const [votes, setVotes] = useState("");
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState(initialState)
   const [response, setResponse] = useState({})
@@ -55,38 +56,18 @@ export const Table = ({ id, setTables, number, email }) => {
   const uploadButton = (
     <Button icon={<UploadOutlined />}>Click para subir la imagen</Button>
   );
-  const uploadImage = async (e) => {
-    setLoading(true);
-    const files = e.fileList;
-    const images = new FormData();
-    const axiosInstance = axios.create();
-    delete axiosInstance.defaults.headers.common["authorization"];
-    images.append("file", files[0]?.originFileObj);
-    images.append("upload_preset", "beti-work");
-    await axiosInstance
-      .post("https://api.cloudinary.com/v1_1/dkwdjfwfc/image/upload", images, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        message.success(`${files[0].name} imagen cargada corectamente`);
-        setImage(res.data.secure_url);
-      })
-      .catch((err) => {
-        message.error(`Upps algo salió mal, por favor intentalo nuevamente`);
-        console.log("Table/Error: ", err);
-      })
-      .finally(() => setLoading(false));
-  };
-  const cover = image ? (
-    <Image src={image} style={{ width: 260, height: 300, marginLeft: 45 }} />
+
+
+  const cover = img ? (
+    <Image src={img} style={{ width: 280, height: 360, marginLeft: 35 }} />
   ) : (
-    <Skeleton.Image style={{ width: 260, height: 300, marginLeft: 45 }} />
+    <Skeleton.Image style={{ width: 280, height: 360, marginLeft: 35 }} />
   );
-  const handleChange = (e) => {
-    setVotes(parseInt(e.target.value));
-  };
+
+  // const handleChange = (e) => {
+  //   setVotes(parseInt(e.target.value));
+  // };
+
   const title = votes ? (
     <span className="numeric-input-title">
       {votes !== "-" ? formatNumber(votes) : "-"}
@@ -95,17 +76,8 @@ export const Table = ({ id, setTables, number, email }) => {
     "Número de votos"
   );
 
-  const handleClick = () => {
-    if (!votes) return;
-    setTables((state) => {
-      state[id] = {
-        id,
-        votes,
-        img: image,
-      };
-      return [...state];
-    });
-  };
+
+
   const header = <span className="blue">Mesa número {number}</span>
 
   const handleChangeCreate = event => {
@@ -146,13 +118,6 @@ export const Table = ({ id, setTables, number, email }) => {
       {email || Object.keys(response).length ?
 
         <Card title={header} className="card m-h" cover={cover}>
-          <Upload
-            name="image"
-            className="center"
-            onChange={uploadImage}
-          >
-            {uploadButton}
-          </Upload>
           <Row>
             <Text className="m-t">Cuantos votos obtuvo el PACTO?</Text>
             <Col span={9}>
@@ -162,9 +127,8 @@ export const Table = ({ id, setTables, number, email }) => {
                 placement="topLeft"
                 overlayClassName="numeric-input"
               >
-
                 <Input
-                  onChange={handleChange}
+                  // onChange={handleChange}
                   // onBlur={this.onBlur}
                   placeholder="Número..."
                   maxLength={4}
@@ -178,7 +142,7 @@ export const Table = ({ id, setTables, number, email }) => {
             <Col span={14}>
               <Tooltip title='Testigo'>
                 <Input
-                  value={response.name}
+                  value={name}
                   size="large"
                   readOnly
                   bordered
@@ -192,10 +156,10 @@ export const Table = ({ id, setTables, number, email }) => {
             block
             type="primary"
             size="large"
-            onClick={handleClick}
+            // onClick={handleClick}
             style={{ marginTop: 15 }}
           >
-            Enviar
+        
           </Button>
           <img className="logo" src={logo} alt="logo" />
           {loading && <Spin className="spin" size="large" tip="Cargando..." />}
