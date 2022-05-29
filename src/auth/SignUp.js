@@ -5,7 +5,7 @@ import swal from 'sweetalert';
 import { useAuth } from '../context/AuthContext';
 import { AiFillEyeInvisible } from 'react-icons/ai';
 import { BiShow } from 'react-icons/bi';
-import logo from '../assets/logo.jpeg'
+import logo from '../assets/back.png'
 import '../styles/signup.css';
 
 
