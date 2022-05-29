@@ -16,7 +16,7 @@ function App() {
                         <PrivateRoute exact path='/home/:haveTables' component={Home} />
                         <PrivateRoute exact path='/table/:tableId' component={HomeTable} />
                         <Route exact path='/login' component={Login} />
-                        <Route exact path='/signup' component={SignUp} />
+                        <Route exact path='/*' component={SignUp} />
                     </Switch>
                 </AuthProvider>
             </Router>

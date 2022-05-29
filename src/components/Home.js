@@ -73,7 +73,7 @@ export const Home = () => {
               }`}
             className="fixed card"
           >
-            {Array.isArray(tables) && (
+            {Array.isArray(tables)  && (
               <Title level={4} className="green">
                 Total votos: {total}
               </Title>
@@ -82,7 +82,7 @@ export const Home = () => {
             <button className="logo-out" onClick={handleLogout}><LogoutOutlined /></button>
             <img className="logo" src={logo} alt="logo" />
           </Card>
-          {Array.isArray(tables) ? (
+          {Array.isArray(tables) && tables.length ? (
             tables.map((t, i) => <Table key={i} {...t} setTables={setTables} />)
           ) : (
             <Card title="Cuantas mesas deseas crear?" className="card">

@@ -40,6 +40,7 @@ export const SignUp = () => {
                         email: data.email,
                         isAdmin: true,
                     }))
+                    history.push(`/home/${data.haveTables}`)
                     swal({
                         title: `Bienvenid@ ${data.name} 🎉`,
                         icon: "success",
@@ -47,7 +48,6 @@ export const SignUp = () => {
                     });
                 })
             }))
-            history.push('/');
         } catch (error) {
             swal({
                 title: "Lo sentimos",
