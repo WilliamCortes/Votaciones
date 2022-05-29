@@ -13,17 +13,22 @@ const { Text, Link, Title } = Typography;
 
 const totalVotes = (tables) =>
   tables.map((t) => t.votes).reduce((a, c) => a + c);
+  
+  const totalVotesPetro = (tables) =>
+  tables.map((t) => t.votesPetro).reduce((a, c) => a + c);
 
 export const Home = () => {
   const [tables, setTables] = useState(0);
   const [total, setTotal] = useState(0);
+  const [totalPetro, setTotalPetro] = useState(0);
   const { logout, currentUser } = useAuth();
-  const {haveTables} = useParams()
+  const {haveTables} = useParams() || false
 
-  // useEffect(() => {
-  //   if (!Array.isArray(tables)) return;
-  //   setTotal(totalVotes(tables));
-  // }, [tables]);
+  useEffect(() => {
+    if (!Array.isArray(tables) || !tables.length) return;
+    setTotal(totalVotes(tables));
+    setTotalPetro(totalVotesPetro(tables))
+  }, [tables]);
 
   useEffect(()=>{
     if(!haveTables) return
@@ -74,9 +79,15 @@ export const Home = () => {
             className="fixed card"
           >
             {Array.isArray(tables)  && (
-              <Title level={4} className="green">
-                Total votos: {total}
-              </Title>
+              <>
+                <Title level={4} className="purple">
+                  Total Votos Petro: {totalPetro}
+                </Title>
+                <hr/>
+                <Title level={4} className="green">
+                  Total votos: {total}
+                </Title>
+              </>
             )}
 
             <button className="logo-out" onClick={handleLogout}><LogoutOutlined /></button>

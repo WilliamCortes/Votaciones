@@ -38,6 +38,7 @@ export const HomeTable = () => {
 
     const [image, setImage] = useState("");
     const [votes, setVotes] = useState("");
+    const [votesPetro, setVotesPetro] = useState("");
     const [table, setTable] = useState({})
     const [loading, setLoading] = useState(false);
 
@@ -45,6 +46,9 @@ export const HomeTable = () => {
     
     const getTable = async()=>{
         const res = await axios.get(`/api/tables/table/${tableId}`)
+        if(res.data.img) setImage(res.data.img)
+        if(res.data.votes) setVotes(res.data.votes)
+        if(res.data.votesPetro) setVotesPetro(res.data.votesPetro)
         return setTable(res.data)
     }
 
@@ -82,6 +86,9 @@ export const HomeTable = () => {
   const handleChange = (e) => {
     setVotes(parseInt(e.target.value));
   };
+  const handleChangePetro = (e) => {
+    setVotesPetro(parseInt(e.target.value));
+  };
 
   const cover = image ? (
     <Image src={image} style={{ width: 260, height: 300, marginLeft: 45 }} />
@@ -111,10 +118,18 @@ export const HomeTable = () => {
   }
   
   const handleClick = async () => {
-    if (!votes || !image) return;
+    if (!votes || !votesPetro || !image) return;
+    if(votesPetro >  votes) {
+      return    swal({
+        title: `Los votos de la mesa deben ser mayores a los votos de Petro`,
+        icon: "warning",
+        timer: 5000,
+      });
+    }
     const data = {
         image,
         votes,
+        votesPetro,
         id: table.id
     }
     try {
@@ -123,7 +138,7 @@ export const HomeTable = () => {
           swal({
             title: `Genial ${table.name} la mesa #: ${table.number} ya agregó los votos y la imagen 🎉`,
             icon: "success",
-            timer: 5000,
+            timer: 10000,
           });
         })
  
@@ -151,16 +166,35 @@ export const HomeTable = () => {
       {uploadButton}
     </Upload>
     <Row>
-      <Text className="m-t">Cuantos votos obtuvo el PACTO?</Text>
-      <Col span={9}>
-        <Tooltip
-          trigger={["focus"]}
-          title={title}
-          placement="topLeft"
-          overlayClassName="numeric-input"
-        >
-
+    <Tooltip title='Testigo'>
+          <small>{table.name}</small>
+        </Tooltip>
+    </Row>
+    <hr/>
+    <Row>
+        <Col span={11}>
+          <Text className="m-t">Votos Petro:</Text>
+        </Col>
+        <Col span={2} />
+        <Col span={11}>
+          <Text className="m-t">Total Votos Mesa: </Text>
+        </Col>
+    </Row>
+    <Row>
+      <Col span={11}>
           <Input
+            onChange={handleChangePetro}
+            // onBlur={this.onBlur}
+            placeholder="Número..."
+            maxLength={4}
+            value={votesPetro}
+            type="number"
+            size="large"
+          />
+      </Col>
+      <Col span={2} />
+      <Col span={11}>
+      <Input
             onChange={handleChange}
             // onBlur={this.onBlur}
             placeholder="Número..."
@@ -169,20 +203,10 @@ export const HomeTable = () => {
             type="number"
             size="large"
           />
-        </Tooltip>
-      </Col>
-      <Col span={1} />
-      <Col span={14}>
-        <Tooltip title='Testigo'>
-          <Input
-            value={table.name}
-            size="large"
-            readOnly
-            bordered
-          />
-        </Tooltip>
+  
       </Col>
     </Row>
+   
 
 
     <Button

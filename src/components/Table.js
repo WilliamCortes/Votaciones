@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import {
-  Upload,
   Input,
   Image,
   Button,
   Card,
-  message,
   Skeleton,
   Tooltip,
   Typography,
@@ -38,15 +36,14 @@ function formatNumber(value) {
   return `${prefix}${result}${list[1] ? `.${list[1]}` : ""}`;
 }
 
-export const Table = ({ id, setTables, number, email, name, img, votes }) => {
+export const Table = ({ id,  number, email, name, img, votes, votesPetro }) => {
   const initialState = {
     name: '',
     email: '',
     password: '',
     isAdmin: false,
   }
-  // const [img, setImage] = useState("");
-  // const [votes, setVotes] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState(initialState)
   const [response, setResponse] = useState({})
@@ -63,10 +60,6 @@ export const Table = ({ id, setTables, number, email, name, img, votes }) => {
   ) : (
     <Skeleton.Image style={{ width: 280, height: 360, marginLeft: 35 }} />
   );
-
-  // const handleChange = (e) => {
-  //   setVotes(parseInt(e.target.value));
-  // };
 
   const title = votes ? (
     <span className="numeric-input-title">
@@ -96,7 +89,7 @@ export const Table = ({ id, setTables, number, email, name, img, votes }) => {
         axios.put(`/api/tables/addname`, { ...state, id }).then(({ data }) => {
           setResponse({ email: data.email, name: data.name })
           swal({
-            title: `Mesa asignada a ${data.name} 🎉`,
+            title: `Mesa asignada a ${name} 🎉`,
             icon: "success",
             timer: 1500,
           });
@@ -119,8 +112,16 @@ export const Table = ({ id, setTables, number, email, name, img, votes }) => {
 
         <Card title={header} className="card m-h" cover={cover}>
           <Row>
-            <Text className="m-t">Cuantos votos obtuvo el PACTO?</Text>
-            <Col span={9}>
+            <Col span={11}>
+            <Text className="m-t">Votos Petro:</Text>
+            </Col>
+            <Col span={2} />
+            <Col span={11}>
+            <Text className="m-t">Total Votos Mesa: </Text>
+            </Col>
+            </Row>
+          <Row>
+            <Col span={11}>
               <Tooltip
                 trigger={["focus"]}
                 title={title}
@@ -128,19 +129,28 @@ export const Table = ({ id, setTables, number, email, name, img, votes }) => {
                 overlayClassName="numeric-input"
               >
                 <Input
-                  // onChange={handleChange}
-                  // onBlur={this.onBlur}
+                  placeholder="Número..."
+                  maxLength={4}
+                  value={votesPetro}
+                  type="number"
+                  size="large"
+                />
+              </Tooltip>
+            </Col>
+            <Col span={2} />
+            <Col span={11}>
+            <Input
                   placeholder="Número..."
                   maxLength={4}
                   value={votes}
                   type="number"
                   size="large"
                 />
-              </Tooltip>
             </Col>
-            <Col span={1} />
-            <Col span={14}>
-              <Tooltip title='Testigo'>
+          </Row>
+          <br/>
+          <Row>
+          <Tooltip title='Testigo'>
                 <Input
                   value={name}
                   size="large"
@@ -148,19 +158,8 @@ export const Table = ({ id, setTables, number, email, name, img, votes }) => {
                   bordered
                 />
               </Tooltip>
-            </Col>
           </Row>
 
-
-          <Button
-            block
-            type="primary"
-            size="large"
-            // onClick={handleClick}
-            style={{ marginTop: 15 }}
-          >
-        
-          </Button>
           <img className="logo" src={logo} alt="logo" />
           {loading && <Spin className="spin" size="large" tip="Cargando..." />}
         </Card>
