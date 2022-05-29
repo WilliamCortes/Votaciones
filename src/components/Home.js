@@ -5,7 +5,7 @@ import { Table } from "./Table";
 import logo from "../assets/logo.jpeg";
 import { useAuth } from "../context/AuthContext";
 import { useHistory } from "react-router-dom";
-import {LogoutOutlined} from '@ant-design/icons';
+import {LogoutOutlined,PlusOutlined} from '@ant-design/icons';
 import { useParams } from "react-router-dom";
 
 const { Header, Footer, Content } = Layout;
@@ -31,6 +31,7 @@ export const Home = () => {
   }, [tables]);
 
   useEffect(()=>{
+    console.log('Home-haveTables',haveTables);
     if(!haveTables) return
     getTables()
   },[])
@@ -52,7 +53,14 @@ export const Home = () => {
     })
   };
 
-  console.log('Home-haveTables',haveTables);
+  const addOneTable = (e) => {
+    const admin = currentUser.email
+    axios.post(`/api/tables/${1}/${admin}`)
+    .then(({ data }) => {
+      console.log('Home-data',data)
+      setTables(data);
+    })
+  };
 
   //******* */
   const history = useHistory();
@@ -91,6 +99,7 @@ export const Home = () => {
             )}
 
             <button className="logo-out" onClick={handleLogout}><LogoutOutlined /></button>
+            <button className="logo-sum" onClick={addOneTable}><PlusOutlined /></button>
             <img className="logo" src={logo} alt="logo" />
           </Card>
           {Array.isArray(tables) && tables.length ? (

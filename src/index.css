@@ -35,13 +35,16 @@ code {
   box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
 }
 
-.logo-out{
+.logo-out, .logo-sum{
   position: absolute ;
   top: 0;
   right: 0;
   background-color: transparent;
   border:none;
   cursor: pointer;
+}
+.logo-sum{
+  top: 22px;
 }
 .logo {
   position: absolute;
