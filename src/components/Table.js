@@ -10,14 +10,13 @@ import {
   Typography,
   Spin,
   Row,
-  Col
+  Col,
 } from "antd";
-import swal from 'sweetalert';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { useAuth } from '../context/AuthContext';
+import swal from "sweetalert";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { useAuth } from "../context/AuthContext";
 import { UploadOutlined } from "@ant-design/icons";
 import logo from "../assets/logo.jpeg";
-
 
 const { Text } = Typography;
 function formatNumber(value) {
@@ -36,24 +35,23 @@ function formatNumber(value) {
   return `${prefix}${result}${list[1] ? `.${list[1]}` : ""}`;
 }
 
-export const Table = ({ id,  number, email, name, img, votes, votesPetro }) => {
+export const Table = ({ id, number, email, name, img, votes, votesPetro }) => {
   const initialState = {
-    name: '',
-    email: '',
-    password: '',
+    name: "",
+    email: "",
+    password: "",
     isAdmin: false,
-  }
+  };
 
   const [loading, setLoading] = useState(false);
-  const [state, setState] = useState(initialState)
-  const [response, setResponse] = useState({})
+  const [state, setState] = useState(initialState);
+  const [response, setResponse] = useState({});
 
   const { signup } = useAuth();
 
   const uploadButton = (
     <Button icon={<UploadOutlined />}>Click para subir la imagen</Button>
   );
-
 
   const cover = img ? (
     <Image src={img} style={{ width: 280, height: 360, marginLeft: 35 }} />
@@ -69,32 +67,26 @@ export const Table = ({ id,  number, email, name, img, votes, votesPetro }) => {
     "Número de votos"
   );
 
+  const header = <span className="blue">Mesa número {number}</span>;
 
-
-  const header = <span className="blue">Mesa número {number}</span>
-
-  const handleChangeCreate = event => {
-    setState({ ...state, [event.target.name]: event.target.value, })
-  }
+  const handleChangeCreate = (event) => {
+    setState({ ...state, [event.target.name]: event.target.value });
+  };
 
   const handleClickCreate = async () => {
-    const {
-      name,
-      email,
-      password,
-    } = state
-    if (!name || !email || !password) return
+    const { name, email, password } = state;
+    if (!name || !email || !password) return;
     try {
-      await signup(state.email, state.password).then((() => {
+      await signup(state.email, state.password).then(() => {
         axios.put(`/api/tables/addname`, { ...state, id }).then(({ data }) => {
-          setResponse({ email: data.email, name: data.name })
+          setResponse({ email: data.email, name: data.name });
           swal({
             title: `Mesa asignada a ${name} 🎉`,
             icon: "success",
             timer: 1500,
           });
-        })
-      }))
+        });
+      });
     } catch (error) {
       swal({
         title: "Lo sentimos",
@@ -104,22 +96,21 @@ export const Table = ({ id,  number, email, name, img, votes, votesPetro }) => {
       });
       console.log(error.message);
     }
-  }
+  };
 
   return (
     <>
-      {email || Object.keys(response).length ?
-
+      {email || Object.keys(response).length ? (
         <Card title={header} className="card m-h" cover={cover}>
           <Row>
             <Col span={11}>
-            <Text className="m-t">Votos Petro:</Text>
+              <Text className="m-t">Votos Petro:</Text>
             </Col>
             <Col span={2} />
             <Col span={11}>
-            <Text className="m-t">Total Votos Mesa: </Text>
+              <Text className="m-t">Total Votos Mesa: </Text>
             </Col>
-            </Row>
+          </Row>
           <Row>
             <Col span={11}>
               <Tooltip
@@ -139,39 +130,42 @@ export const Table = ({ id,  number, email, name, img, votes, votesPetro }) => {
             </Col>
             <Col span={2} />
             <Col span={11}>
-            <Input
-                  placeholder="Número..."
-                  maxLength={4}
-                  value={votes}
-                  type="number"
-                  size="large"
-                />
+              <Input
+                placeholder="Número..."
+                maxLength={4}
+                value={votes}
+                type="number"
+                size="large"
+              />
             </Col>
           </Row>
-          <br/>
+          <br />
           <Row>
-          <Tooltip title='Testigo'>
-                <Input
-                  value={name}
-                  size="large"
-                  readOnly
-                  bordered
-                />
-              </Tooltip>
+            <Tooltip title="Testigo">
+              <Input value={name} size="large" readOnly bordered />
+            </Tooltip>
           </Row>
 
           <img className="logo" src={logo} alt="logo" />
           {loading && <Spin className="spin" size="large" tip="Cargando..." />}
         </Card>
-        :
+      ) : (
         // **********************************************************************
-        <Card title={header} className="card m-h" >
-          <Skeleton.Input style={{ width: 300, height: 222, marginBottom: 20, background: '#85F4FF', opacity: 0.1 }} />
+        <Card title={header} className="card m-h">
+          <Skeleton.Input
+            style={{
+              width: 300,
+              height: 222,
+              marginBottom: 20,
+              background: "#85F4FF",
+              opacity: 0.1,
+            }}
+          />
           <Text className="m-t">Nombre del testigo</Text>
           <Input
             onChange={handleChangeCreate}
             placeholder="Nombre ..."
-            name='name'
+            name="name"
             value={state.name}
             type="text"
             size="large"
@@ -180,7 +174,7 @@ export const Table = ({ id,  number, email, name, img, votes, votesPetro }) => {
           <Input
             onChange={handleChangeCreate}
             placeholder="Email ..."
-            name='email'
+            name="email"
             value={state.email}
             type="email"
             size="large"
@@ -188,11 +182,13 @@ export const Table = ({ id,  number, email, name, img, votes, votesPetro }) => {
 
           <Text className="m-t">Contraseña del testigo</Text>
           <Input.Password
-            name='password'
+            name="password"
             value={state.password}
-            placeholder='Contraseña...'
+            placeholder="Contraseña..."
             onChange={handleChangeCreate}
-            iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
             size="large"
           />
           <Button
@@ -206,7 +202,8 @@ export const Table = ({ id,  number, email, name, img, votes, votesPetro }) => {
           </Button>
           <img className="logo" src={logo} alt="logo" />
           {loading && <Spin className="spin" size="large" tip="Cargando..." />}
-        </Card>}
+        </Card>
+      )}
     </>
   );
 };
